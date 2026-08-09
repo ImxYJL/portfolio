@@ -32,13 +32,13 @@ export function BlogContent() {
           {  body: '크기가 작은 정적 콘텐츠임에도 모든 페이지 이동 시 2.5s+ 소요', tone: 'warn' },
         ]} />
 
-        <Label>접근법 비교</Label>
+        <Label>다른 선택지 비교</Label>
         <Table
           head={['접근법', '원리', '기각 사유', '']}
           selected={2}
           rows={[
-            ['하이브리드\n(SSG + CSR 권한 확인)', '페이지 뼈대는 SSG, 권한만 클라이언트에서 런타임 확인', 'Next.js는 렌더링 전략을 `route` 단위로 결정 → 같은 경로 내 격리 불가 (`DYNAMIC_SERVER_USAGE`)', ''],
-            ['PPR\n(Partial Prerendering)', '정적 shell 즉시 전송 + dynamic 부분만 스트리밍', 'origin 서버 기반 SSR 플로우에서만 동작 → CDN 서빙의 SSG 구조와 양립 불가', ''],
+            ['하이브리드\n(SSG + CSR 권한 확인)', '페이지 뼈대는 SSG로, 권한만 런타임에 클라이언트에서 체크', '권한에 따라 페이지가 보여줄 데이터가 달라짐 → 한 라우트 경로 내에서 두 렌더링 전략이 공존할 수 없음', ''],
+            ['PPR\n(Partial Prerendering)', '정적인 데이터는 즉시 전송 + dynamic 부분만 요청 시 스트리밍', '권한에 따라 페이지가 보여줄 데이터가 달라짐 → 사실상 페이지 전체가 dynamic 데이터에 의존하므로 결과적으로 SSR과 똑같이 동작(느림)', ''],
             ['경로·클라이언트 이원화', '/admin(SSR) + /(SSG)로 경로·페이지·DB 클라이언트 완전 분리', '—', '✓'],
           ]}
         />
