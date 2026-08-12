@@ -5,15 +5,18 @@ import { Label, Prose, Table, Code, CodePair } from '../components/primitives';
 export const meta = {
   id: 'ats',
   index: '03',
-  name: 'ATS Form',
+  name: '지원서 제출 폼',
   accent: 'ats',
   period: '2025.07',
   scale: '1인 개발',
   role: null,
   stack: ['React', 'TypeScript', 'Zod'],
   desc: '이름, 약관 동의, 이력 상세, 이력서 파일 등 타입이 제각각인 필드와 유효성 검증이 필요한 지원서 제출 폼',
-  links: [],
-  hero: { ratio: '4/3', label: 'ATS Form 화면 스크린샷', src: atsImg },
+  links: [
+    { label: 'GitHub', href: 'https://github.com/ImxYJL/my-ats' },
+    { label: 'Live', href: 'https://my-ats-two.vercel.app/apply/1' },
+  ],
+  hero: { ratio: '4/3', label: '지원서 제출 화면 스크린샷', src: atsImg },
 };
 
 export function AtsContent() {
