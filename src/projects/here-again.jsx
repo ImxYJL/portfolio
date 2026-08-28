@@ -1,4 +1,5 @@
 import hereImg from '../assets/images/hereagain.png';
+
 import { Feature } from '../components/layout/ProjectSection';
 import { Label, Prose, Flow, Table, Code } from '../components/primitives';
 
@@ -19,27 +20,67 @@ export const meta = {
 export function HereAgainContent() {
   return (
     <>
-      <Feature title="Multi-Step Form 상태 설계">
-        <Label>캡슐 생성 비동기 플로우</Label>
+      <Feature title="3초의 AI 대기 시간을 어떻게 덜 지루하게 만들까?">
+
+        <Label>문제: 긴 캡슐 생성 과정 기다리기</Label>
+
         <Flow nodes={[
-          { label: '① Presigned URL 세팅', body: '이미지 업로드 준비' },
-          { label: '② S3 업로드', body: '서버에 이미지 저장' },
-          { label: '③ 캡슐 생성', body: '1차 데이터로 서버에 캡슐 생성 요청' },
-          { label: '④ AI 질문 생성', body: '~3초 대기\n프론트가 줄일 수 없는 구간', tone: 'warn' },
+          { label: '①', body: '이미지 저장을 위한 Presigned URL 세팅' },
+          { label: '②', body: 'S3 업로드' },
+          { label: '③', body: '캡슐 생성 요청' },
+          {
+            label: '④',
+            body: 'AI 질문 생성\n약 3초 대기',
+            tone: 'warn',
+          },
         ]} />
 
-        <Label>최적화와 부작용</Label>
+        <Prose>
+          폼 A의 입력(캡슐 생성)을 서버에 전달하고 그 결과를 기반으로 폼 B(캡슐 완성)를 구성하는 구조였습니다.
+          AI 질문 생성 및 백엔드 응답에 필요한 약 3초는 프론트에서 줄일 수 없는 시간이었기 때문에,
+          프론트가 추가로 소모하는 시간과 대기 경험을 줄이는 것을 목표로 잡았습니다.
+        </Prose>
+
+        <Label>가설</Label>
+
+        <Prose>
+          폼 B 렌더링에 필요한 데이터가 이미 확보되어 있다면
+          렌더링 과정에서 발생하는 추가 요청을 제거할 수 있습니다.
+          또한 불가피한 대기가 3초 가량 이어지므로 Spinner 버튼보다 페이지 전환 수준의 Fallback으로 보여주는 편이
+          사용자에게 로딩 상태를 더 명확하게 전달할 수 있다고 판단했습니다.
+        </Prose>
+
+        <Label>해결</Label>
+
         <Table
-          head={['단계', '적용', '부작용']}
+          head={['문제', '해결']}
           rows={[
-            ['캐시 선주입', '③의 응답으로 받은 Form B 렌더용 데이터를 `setQueryData`로 주입 → Form B 렌더 중 추가 요청 방지', 'Form B가 기다릴 `promise`가 사라짐 → `Suspense` Fallback도 트리거되지 않음'],
-            ['수동 전환 제어', '`isTransitioning` 상태 플래그로 Fallback 직접 제어', '`Suspense`가 `promise`를 보고 자동으로 하던 일을 수동으로 체크'],
+            [
+              '폼 B 렌더 중 추가 데이터 요청으로 추가 딜레이 발생',
+              '서버 응답으로 받은 데이터를 TanStack Query 캐시에 미리 주입',
+            ],
+            [
+              '버튼 내부 Spinner로만 로딩 처리',
+              '폼 전환시 Suspense Fallback으로 로딩 안내',
+            ],
           ]}
         />
 
-        <Label>실제 코드: 수동 전환 제어</Label>
+        <Label>예상하지 못한 부작용</Label>
+
+        <Prose>
+          캐시에 데이터를 미리 주입하자 폼 B가 기다릴 Promise가 사라졌습니다.
+          즉, 데이터를 조금 더 빠르게 준비한 결과 오히려 UX를 위한 Suspense Fallback이 트리거되지 않는 문제가 발생했습니다.
+        </Prose>
+
+        <Label>해결</Label>
+
+        <Prose>
+          자동 Promise 트리거에 의존하는 대신 Fallback 제어를 위한 useState 상태를 추가해 수동으로 Fallback을 띄웠습니다.
+        </Prose>
+
         <Code
-          title="페이지 컴포넌트 — isTransitioning 플래그로 3분기"
+          title="Fallback 노출을 직접 제어"
           lang="tsx"
           code={`{
   step === STEP1 ? (
@@ -55,8 +96,20 @@ export function HereAgainContent() {
   );
 }`}
           highlights={[4, 5, 8]}
-          annotations={{ 4: '부모가 플래그 주입', 5: 'setter도 주입', 8: '수동 Fallback 분기' }}
+          annotations={{
+            4: '전환 상태 전달',
+            5: '대기 중에는 Fallback',
+            8: '완료 후 실제 폼 렌더링',
+          }}
         />
+
+        <Label>결과</Label>
+
+        <Prose>
+          불필요한 추가 요청을 제거해 폼 전환에 필요한 프론트 측 대기 시간을 줄이고,
+          AI가 작업 중인 동안 사용자가 명확하게 로딩 상태를 확인할 수 있도록 개선했습니다.
+        </Prose>
+
       </Feature>
     </>
   );
