@@ -14,7 +14,7 @@ export const meta = {
   stack: ['React', 'TypeScript'],
   desc: '추억이 담긴 사진을 AI가 분석해 질문을 만들어주고, 타임캡슐로 묻어 주는 서비스',
   links: [],
-  hero: { ratio: '3/2', label: 'Here, Again 메인 화면 스크린샷', src: hereImg },
+  hero: { ratio: '3/2', label: 'Here, Again 캡슐 생성 흐름 (폼 A → 로딩 Fallback → 폼 B)', src: hereImg },
 };
 
 export function HereAgainContent() {
