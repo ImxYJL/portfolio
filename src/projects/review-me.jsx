@@ -8,7 +8,7 @@ import {
 
 export const meta = {
   id: 'review-me',
-  index: '04',
+  index: '03',
   name: 'Review-me',
   accent: 'review',
   period: '2024.07 — 2025.02',
@@ -19,7 +19,7 @@ export const meta = {
   links: [
     {
       label: 'GitHub',
-      href: '[https://github.com/woowacourse-teams/2024-review-me](https://github.com/woowacourse-teams/2024-review-me)',
+      href: 'https://github.com/woowacourse-teams/2024-review-me',
     },
   ],
   hero: {

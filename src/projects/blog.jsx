@@ -1,4 +1,5 @@
 import blogImg from '../assets/images/blog.png';
+import blogDetailImg from '../assets/images/blog_detail.png';
 
 import { Feature } from '../components/layout/ProjectSection';
 import {
@@ -16,10 +17,13 @@ export const meta = {
   stack: ['Next.js', 'TypeScript', 'Supabase'],
   desc: '기존 블로그 플랫폼의 성능 및 자유도 한계를 직접 해결하고자 Next.js로 커스텀한 개인 블로그',
   links: [
-    { label: 'GitHub', href: '[https://github.com/ImxYJL/yejin-notes](https://github.com/ImxYJL/yejin-notes)' },
-    { label: 'Live', href: '[https://yejin-notes.vercel.app/dev/posts](https://yejin-notes.vercel.app/dev/posts)' },
+    { label: 'GitHub', href: 'https://github.com/ImxYJL/yejin-notes' },
+    { label: 'Live', href: 'https://yejin-notes.vercel.app/dev/posts' },
   ],
-  hero: { ratio: '3/2', label: '블로그 스크린샷 이미지', src: blogImg },
+  hero: [
+    { ratio: '3/2', label: '블로그 글 목록 스크린샷', src: blogImg },
+    { ratio: '3/2', label: '블로그 글 상세 스크린샷', src: blogDetailImg },
+  ],
 };
 
 export function BlogContent() {
@@ -30,8 +34,7 @@ export function BlogContent() {
         <Label>문제</Label>
 
         <Prose>
-          정적 콘텐츠를 보여주는 블로그임에도 모든 페이지가 SSR로 동작해
-          포스트 목록과 상세 페이지의 TTFB가 약 2.8초, 2.6초까지 늘어났습니다.
+          텍스트(정적 콘텐츠) 위주의 가벼운 블로그임에도 모든 페이지가 SSR로 동작해 불필요한 서버 왕복 및 검증이 발생했습니다.
         </Prose>
 
         <Flow nodes={[
@@ -41,7 +44,7 @@ export function BlogContent() {
             tone: 'warn',
           },
           {
-            body: '컨텐츠는 정적 데이터지만 요청마다 서버 렌더링 → TTFB 2.5s+',
+            body: '컨텐츠는 정적 데이터지만 요청마다 서버 렌더링',
             tone: 'warn',
           },
         ]} />
@@ -105,8 +108,8 @@ export function BlogContent() {
         <Label>결과</Label>
 
         <Result rows={[
-          { label: '포스트 목록 TTFB', before: 'SSR 2.8s', after: 'SSG 20ms' },
-          { label: '포스트 상세 TTFB', before: 'SSR 2.6s', after: 'SSG 22ms' },
+          { label: '포스트 목록 TTFB', before: 'SSR 0.5s', after: 'SSG 20ms' },
+          { label: '포스트 상세 TTFB', before: 'SSR 0.4s', after: 'SSG 22ms' },
         ]} />
 
         <Prose>
@@ -115,7 +118,7 @@ export function BlogContent() {
         </Prose>
 
         <BlogLink
-          href="[https://yejin-notes.vercel.app/dev/posts/333abda6-2e47-44e5-813d-677f9b17e5ab](https://yejin-notes.vercel.app/dev/posts/333abda6-2e47-44e5-813d-677f9b17e5ab)"
+          href="https://yejin-notes.vercel.app/dev/posts/333abda6-2e47-44e5-813d-677f9b17e5ab"
           text="상세 블로그 포스트"
         />
       </Feature>
@@ -218,14 +221,6 @@ export function BlogContent() {
           서버가 조합한 `editorData` 하나만 사용하도록 경계를 정리했습니다.
         </Prose>
 
-        <Label>자동저장 안정화</Label>
-
-        <Prose>
-          에디터가 리렌더될 때마다 debounce 인스턴스가 재생성되는 문제는
-          lazy init `ref`로 인스턴스를 고정해 해결했고, 최신 상태는 콜백 호출 시점에 전달했습니다.
-          언마운트 시에는 `cancel`로 남은 타이머를 정리했습니다.
-        </Prose>
-
         <Label>배운 점</Label>
 
         <Prose>
@@ -235,52 +230,16 @@ export function BlogContent() {
         </Prose>
 
         <BlogLink
-          href="[https://yejin-notes.vercel.app/dev/posts/416f2344-03fb-4b42-ad71-d38c33f52111](https://yejin-notes.vercel.app/dev/posts/416f2344-03fb-4b42-ad71-d38c33f52111)"
+          href="https://yejin-notes.vercel.app/dev/posts/416f2344-03fb-4b42-ad71-d38c33f52111"
           text="도메인 리팩토링 포스트"
         />
 
         <BlogLink
-          href="[https://yejin-notes.vercel.app/dev/posts/54749061-13a4-46fb-961f-11ce90d6ec5e](https://yejin-notes.vercel.app/dev/posts/54749061-13a4-46fb-961f-11ce90d6ec5e)"
+          href="https://yejin-notes.vercel.app/dev/posts/54749061-13a4-46fb-961f-11ce90d6ec5e"
           text="자동저장 프론트 포스트"
         />
       </Feature>
-
-      <Feature title="환경에 따라 달라지는 코드 하이라이팅">
-
-        <Label>문제</Label>
-
-        <Prose>
-          코드 하이라이터 Shiki의 비동기 엔진 초기화가 CSR 에디터의 동기 렌더링 흐름과 충돌해
-          에디터 페이지에서 런타임 에러가 발생했습니다.
-        </Prose>
-
-        <Label>판단</Label>
-
-        <Prose>
-          한 라이브러리로 에디터와 뷰어를 모두 처리하다가 
-          두 환경에서 가장 중요한 요구사항이 다르다는 점을 주목했습니다.
-        </Prose>
-
-        <Table
-          head={['', '에디터', '뷰어']}
-          rows={[
-            ['우선순위', '실시간성 · 렌더 안정성', '하이라이팅 품질'],
-            ['렌더 환경', 'CSR', 'RSC'],
-            ['라이브러리', 'Highlight.js', 'Shiki'],
-            ['적용 방식', '동기 렌더링', '서버에서 비동기 처리'],
-          ]}
-        />
-
-        <Prose>
-          에디터는 안정적인 실시간 렌더링을, 뷰어는 높은 하이라이팅 품질을
-          우선해 환경에 맞는 라이브러리를 각각 선택했습니다.
-        </Prose>
-
-        <BlogLink
-          href="[https://yejin-notes.vercel.app/dev/posts/cd337be1-0d0d-4933-b737-dc02fdb65bd1](https://yejin-notes.vercel.app/dev/posts/cd337be1-0d0d-4933-b737-dc02fdb65bd1)"
-          text="상세 포스트"
-        />
-      </Feature>
+     
     </>
   );
 }

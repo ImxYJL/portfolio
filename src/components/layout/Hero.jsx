@@ -78,8 +78,8 @@ export function Hero() {
         <Role>Frontend Developer</Role>
         <Name>이예진</Name>
         <Tagline>
-          구현 중 마주친 <em>제약</em>을 우회하지 않고,<br />
-          제약이 드러낸 <em>구조</em>를 다시 설계하는 개발자입니다.
+          {/* 구현 중 마주친 <em>제약</em>을 우회하지 않고,<br />
+          제약이 드러낸 <em>구조</em>를 다시 설계하는 개발자입니다. */}
         </Tagline>
         <Contact>
           <a href="https://github.com/ImxYJL" target="_blank" rel="noopener noreferrer">

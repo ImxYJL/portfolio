@@ -111,6 +111,18 @@ const Links = styled.div`
   }
 `;
 
+/* Hero 이미지 여러 장: 한 장씩 세로로 */
+const HeroStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin: 12px 0 64px;
+
+  img {
+    margin: 0 auto;
+  }
+`;
+
 /* --- Feature (기능 단위 블록 묶음) --- */
 const FeatureWrap = styled.div`
   margin-bottom: clamp(52px, 7vw, 76px);
@@ -178,8 +190,14 @@ export function ProjectSection({ meta, children }) {
           </div>
         </Intro>
 
-        {/* Hero 이미지 (src 있으면 실제 이미지, 없으면 placeholder) */}
-        {meta.hero && (
+        {/* Hero 이미지 (src 있으면 실제 이미지, 없으면 placeholder). 배열이면 한 장씩 세로로. */}
+        {Array.isArray(meta.hero) ? (
+          <HeroStack>
+            {meta.hero.map((h) => (
+              <ImagePlaceholder key={h.label} ratio={h.ratio} label={h.label} src={h.src} />
+            ))}
+          </HeroStack>
+        ) : meta.hero && (
           <ImagePlaceholder
             ratio={meta.hero.ratio}
             label={meta.hero.label}
